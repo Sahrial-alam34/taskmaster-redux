@@ -1,10 +1,32 @@
+import { useForm } from "react-hook-form";
 import Modal from "../ui/Modal";
+import { useDispatch } from "react-redux";
+import { addTask } from "../../redux/features/tasks/taskSlice";
 
 
-const AddTaskModal = ({isOpen, setIsOpen}) => {
+const AddTaskModal = ({ isOpen, setIsOpen }) => {
+    const { register, handleSubmit,reset } = useForm();
+
+    const dispatch = useDispatch();
+    const onSubmit = (data) => {
+        dispatch(addTask(data))
+        onCancel()
+    }
+
+    const onCancel = ()=>{
+        reset();
+        setIsOpen(false)
+    }
     return (
         <Modal isOpen={isOpen} setIsOpen={setIsOpen} title="Programming Hero">
-            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Cupiditate quia distinctio similique. Voluptatem voluptas esse assumenda alias cupiditate optio ad, vero, harum fugiat totam, amet omnis ipsum eaque numquam? Asperiores at fugiat ut ipsa accusantium quidem eos? Voluptate saepe, animi maxime consequatur dolor labore aperiam, non, possimus sunt ea soluta repellendus totam a sapiente deserunt quaerat! Maiores suscipit expedita possimus. Illum quaerat eveniet, laboriosam, exercitationem consequuntur consequatur reprehenderit totam magni dignissimos harum dicta. Eaque in neque rem! Voluptate harum perspiciatis architecto provident dolorum. Atque voluptates iusto repellat aliquid nisi minima beatae molestiae fugit minus. Beatae ipsum odit eum consequatur earum!</p>
+            <form onSubmit={handleSubmit(onSubmit)}>
+                <div className="flex flex-col gap-3">
+                    <label htmlFor="title">Title</label>
+                    <input className="w-full rounded-md" type="text" id="title" {...register('name')}></input>
+                </div>
+                <button onClick={()=>onCancel()} type="button">Cancel</button>
+                <button type="submit">Submit</button>
+            </form>
         </Modal>
     );
 };

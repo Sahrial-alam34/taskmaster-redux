@@ -3,10 +3,17 @@ import MyTasks from '../components/tasks/MyTasks';
 import TaskCard from '../components/tasks/TaskCard';
 import { useState } from 'react';
 import AddTaskModal from '../components/tasks/AddTaskModal';
+import { useSelector } from 'react-redux';
 
 const Tasks = () => {
 
-  const [ isOpen, setIsOpen] = useState(false)
+  const [isOpen, setIsOpen] = useState(false);
+  const { tasks } = useSelector((state) => state.tasksSlice)
+  //console.log(tasks)
+
+  const pendingTasks = tasks.filter(item => item.status ==='pending')
+  const runningTasks = tasks.filter(item => item.status ==='running')
+  const doneTasks = tasks.filter(item => item.status ==='done')
   return (
     <div className="h-screen grid grid-cols-12">
       <div className="col-span-9 px-10 pt-10">
@@ -21,8 +28,8 @@ const Tasks = () => {
             <button className="border-2 border-secondary/20 hover:border-primary hover:bg-primary rounded-xl h-10 w-10 grid place-content-center text-secondary hover:text-white transition-all">
               <BellIcon className="h-6 w-6" />
             </button>
-            <button onClick={()=> setIsOpen(!isOpen)} className="btn btn-primary">Add Task</button>
-            <AddTaskModal></AddTaskModal>
+            <button onClick={() => setIsOpen(!isOpen)} className="btn btn-primary">Add Task</button>
+            <AddTaskModal isOpen={isOpen} setIsOpen={setIsOpen}></AddTaskModal>
             {/* <Modal isOpen={isOpen} setIsOpen={setIsOpen} title="Programming Hero">
               <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Cupiditate quia distinctio similique. Voluptatem voluptas esse assumenda alias cupiditate optio ad, vero, harum fugiat totam, amet omnis ipsum eaque numquam? Asperiores at fugiat ut ipsa accusantium quidem eos? Voluptate saepe, animi maxime consequatur dolor labore aperiam, non, possimus sunt ea soluta repellendus totam a sapiente deserunt quaerat! Maiores suscipit expedita possimus. Illum quaerat eveniet, laboriosam, exercitationem consequuntur consequatur reprehenderit totam magni dignissimos harum dicta. Eaque in neque rem! Voluptate harum perspiciatis architecto provident dolorum. Atque voluptates iusto repellat aliquid nisi minima beatae molestiae fugit minus. Beatae ipsum odit eum consequatur earum!</p>
             </Modal> */}
@@ -40,34 +47,39 @@ const Tasks = () => {
             <div className="flex sticky top-0 justify-between bg-[#D3DDF9] p-5 rounded-md mb-3">
               <h1>Up Next</h1>
               <p className="bg-primary text-white w-6 h-6 grid place-content-center rounded-md">
-                0
+                {pendingTasks.length}
               </p>
             </div>
             <div className="space-y-3">
-              <TaskCard />
+              {pendingTasks?.map((item) => (
+                <TaskCard key={item.id} task={item}></TaskCard>
+              ))}
             </div>
           </div>
           <div className="relative h-[800px] overflow-auto">
             <div className="flex sticky top-0 justify-between bg-[#D3DDF9] p-5 rounded-md mb-3">
               <h1>In Progress</h1>
               <p className="bg-primary text-white w-6 h-6 grid place-content-center rounded-md">
-                0
+                {runningTasks.length}
               </p>
             </div>
             <div className="space-y-3">
-              <TaskCard />
-              <TaskCard />
+              {runningTasks?.map((item) => (
+                <TaskCard key={item.id} task={item}></TaskCard>
+              ))}
             </div>
           </div>
           <div className="relative h-[800px] overflow-auto">
             <div className="flex sticky top-0 justify-between bg-[#D3DDF9] p-5 rounded-md mb-3">
               <h1>Up Next</h1>
               <p className="bg-primary text-white w-6 h-6 grid place-content-center rounded-md">
-                0
+                {doneTasks.length}
               </p>
             </div>
             <div className="space-y-3">
-              <TaskCard />
+              {doneTasks?.map((item) => (
+                <TaskCard key={item.id} task={item}></TaskCard>
+              ))}
             </div>
           </div>
         </div>
